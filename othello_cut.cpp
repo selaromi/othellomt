@@ -262,3 +262,8 @@ state_t::print_bits( std::ostream &os ) const
   for( int i = 31; i >= 0; --i ) os << (free_&(1<<i)?'1':'0');
 }
 
+int main() { 
+        
+   return 1; 
+    
+}
