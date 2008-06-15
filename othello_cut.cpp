@@ -12,7 +12,7 @@
 #include "othello_cut.h"
 
 
-inline unsigned
+unsigned
 state_t::value() const
 {
   int v = 0;
@@ -23,7 +23,7 @@ state_t::value() const
   return(36+v);
 }
 
-inline bool
+bool
 state_t::terminal( void ) const
 {
   if( is_full() ) return(true);
@@ -222,7 +222,7 @@ state_t::print_bits( std::ostream &os ) const
 }
 
 
-int main() {
+/*int main() {
 
 	state_t prueba;
 
@@ -273,7 +273,7 @@ int main() {
 
 }
 
-
+*/
 
 
 
