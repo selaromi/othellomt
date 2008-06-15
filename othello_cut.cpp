@@ -2,7 +2,7 @@
 // Universidad Simon Bolivar, 2005.
 // Author: Blai Bonet
 // Last Revision: 05/17/06
-// Modified by: 
+// Modified by: Ignacio
 
 #include <iostream>
 #include <iomanip>
