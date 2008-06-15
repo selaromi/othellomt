@@ -65,11 +65,10 @@ class state_t
   unsigned pos_;
 public:
   explicit state_t( unsigned char t = 6 ) : t_(t), free_(0), pos_(0) { }
-
+  bool operator==( const state_t &s ) const { return((t_==s.t_)&&(free_==s.free_)&&(pos_==s.pos_)); }
   unsigned char t() const { return(t_); }
   unsigned free() const { return(free_); }
   unsigned pos() const { return(pos_); }
-
   bool is_color( bool color, int pos ) const { if( color ) return( pos<4?t_&(1<<pos):pos_&(1<<pos-4) ); else return( !(pos<4?t_&(1<<pos):pos_&(1<<pos-4)) ); }
   bool is_black( int pos ) const { return(is_color(true,pos)); }
   bool is_white( int pos ) const { return(is_color(false,pos)); }
