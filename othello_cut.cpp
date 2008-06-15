@@ -7,6 +7,8 @@
 //              Ignacio Morales
 
 #include <iostream>
+#include <iomanip>
+#include <ext/hash_map>
 #include "assert.h"
 #include "othello_cut.h"
 
@@ -219,6 +221,25 @@ state_t::print_bits( std::ostream &os ) const
   os << ":";
   for( int i = 31; i >= 0; --i ) os << (free_&(1<<i)?'1':'0');
 }
+
+
+////////////////////HASH////////////////////
+//Estructura para manejar el hash
+class alphaBeta {
+    public:
+    unsigned f_minus, f_plus;
+};
+
+namespace __gnu_cxx {
+    template<> class hash<state_t> {
+    public:
+        size_t operator()( const state_t &s ) const { return(s.free()); }
+    };
+};
+
+class hash_t : public __gnu_cxx::hash_map<state_t,alphaBeta> { };  // class
+hash_t hash; // hash instance
+
 
 int main() {
 
