@@ -20,6 +20,7 @@ bool otColor;
 class alphaBeta {
     public:
     int f_minus, f_plus;
+	explicit alphaBeta(): f_minus(INT_MIN), f_plus(INT_MAX) {}
 };
 
 namespace __gnu_cxx {
@@ -106,6 +107,10 @@ int alphabeta(state_t node, int alpha, int beta, int nodeType) {
     //Si el nodo esta en la tabla
     if(it!=hash.end()){
 
+//std::cout<<"alpha: "<<alpha<<" beta: "<<beta;
+//std::cout<<" f+: "<<((*it).second.f_plus)<<" f-: "<<((*it).second.f_minus)<<std::endl;
+//node.print(std::cout,1);
+
 		if(((*it).second.f_minus) >= beta)
 			return ((*it).second.f_minus);
 	    
@@ -114,7 +119,6 @@ int alphabeta(state_t node, int alpha, int beta, int nodeType) {
 
     }
 
-    //Si el nodo no esta en la tabla
 	if (node.terminal()) {
 		g= (int) node.value();
 
@@ -153,12 +157,29 @@ int alphabeta(state_t node, int alpha, int beta, int nodeType) {
 		}
 	}
 
+	//UPDATEAR HASH AQUI?
+
 	if (g<beta)
 		ab.f_plus= g;
 	if (g>alpha)
 		ab.f_minus= g;
 
-	hash.insert(std::make_pair(node,ab));
+		hash.insert(std::make_pair(node,ab));
+
+
+	return g;
+}
+
+
+int MT_SSS (state_t node){
+
+	int g= INT_MAX;
+	int y= 0;
+
+	while (y!=g){
+		y= g;
+		g= alphabeta(node,(y-1),y,MAXNODE);
+	}
 
 	return g;
 }
@@ -205,8 +226,7 @@ int main() {
 //	prueba = prueba.move(true,36);
 
 
-	std::cout<<alphabeta(prueba,72,73,MAXNODE)<<std::endl;
-
+	std::cout<<MT_SSS(prueba)<<std::endl;
 
 
 
@@ -214,8 +234,6 @@ int main() {
 
 
 }
-
-
 
 
 
