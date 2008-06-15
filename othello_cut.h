@@ -1,6 +1,8 @@
 #include <iostream>
 #include <iomanip>
 
+#define MAX(s,t)      ((s)>(t)?(s):(t))
+#define MIN(s,t)      ((s)<(t)?(s):(t))
 #define MAXVALUE      1000
 #define DIM           36
 #define N             6

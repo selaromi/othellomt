@@ -1,10 +1,10 @@
 #include <iomanip>
 #include <ext/hash_map>
 #include <limits.h>
+#include <algorithm>
 #include "othello_cut.h"
 
-#define MAX(s,t)      ((s)>(t)?(s):(t))
-#define MIN(s,t)      ((s)<(t)?(s):(t))
+
 
 #define MINNODE 0
 #define MAXNODE 1
@@ -19,7 +19,7 @@ bool otColor;
 //Estructura para manejar el hash
 class alphaBeta {
     public:
-    unsigned f_minus, f_plus;
+    int f_minus, f_plus;
 };
 
 namespace __gnu_cxx {
@@ -48,7 +48,7 @@ state_t* firstchild (state_t node, int nodeType, int &p){
 
 
 	//Busca posicion para colocar ficha de color
-    for (int i= 0; i<DIM; i++){
+    for (int i= 0; i<=DIM; i++){
 		
 		if (node.outflank(color,i)){
 			p= i;
@@ -58,8 +58,7 @@ state_t* firstchild (state_t node, int nodeType, int &p){
 	}
 
 	//Si no encuentra posicion
-	free(rNode);
-	return NULL;
+	return rNode;
 }
 
 state_t* nextchild (state_t node, int nodeType, int &p){
@@ -91,14 +90,15 @@ state_t* nextchild (state_t node, int nodeType, int &p){
 }
 
 
-unsigned alphabeta(state_t node, unsigned alpha, unsigned beta, int nodeType) {
+int alphabeta(state_t node, int alpha, int beta, int nodeType) {
 
-	unsigned g;
-	unsigned a;
-	unsigned b;
+	int g;
+	int a;
+	int b;
 	state_t * c;
 	int p = 0;
 	alphaBeta ab;
+	int arg;
 
     //Se busca el nodo en la tabla de hash
     hash_t::iterator it= hash.find(node);
@@ -116,20 +116,22 @@ unsigned alphabeta(state_t node, unsigned alpha, unsigned beta, int nodeType) {
 
     //Si el nodo no esta en la tabla
 	if (node.terminal()) {
-		g= node.value();
+		g= (int) node.value();
 
 	} else {
 
 		if (nodeType==MAXNODE){
 
-			g= 0;
+			g= INT_MIN;
 			a= alpha;
 
 			c= firstchild(node,nodeType,p);
 
 			while ((g<beta) && (c!=NULL)) {
-				g= MAX(g, alphabeta((*c),a,beta,MINNODE));
-				a= MAX(a,g);
+				arg= alphabeta((*c),a,beta,MINNODE);
+				g= std::max(g,arg);
+				a= std::max(a,g);
+
 				free(c);
 				c= nextchild(node,nodeType,p);
 			}
@@ -142,8 +144,9 @@ unsigned alphabeta(state_t node, unsigned alpha, unsigned beta, int nodeType) {
 			c= firstchild(node,nodeType,p);
 			
 			while ((g>alpha) && (c!=NULL)) {
-				g= MIN(g, alphabeta((*c),alpha,b,MAXNODE));
-				b= MIN(b,g);
+				arg= alphabeta((*c),alpha,b,MAXNODE);
+				g= std::min(g,arg);
+				b= std::min(b,g);
 				free(c);
 				c= nextchild(node,nodeType,p);
 			}
@@ -198,8 +201,9 @@ int main() {
 	prueba = prueba.move(true,16);
 	prueba = prueba.move(false,4);
 	prueba = prueba.move(true,29);
-	prueba = prueba.move(false,35);
-	prueba = prueba.move(true,36);
+//	prueba = prueba.move(false,35);
+//	prueba = prueba.move(true,36);
+
 
 	std::cout<<alphabeta(prueba,72,73,MAXNODE)<<std::endl;
 
