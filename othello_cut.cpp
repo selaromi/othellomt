@@ -245,13 +245,47 @@ int main() {
 
 	state_t prueba;
 
-	prueba.set_color(true,11);
-//	prueba.set_color(true,28);
+	prueba = prueba.move(true,12);
+	prueba = prueba.move(false,21);
+	prueba = prueba.move(true,26);
+	prueba = prueba.move(false,13);
+	prueba = prueba.move(true,22);
+	prueba = prueba.move(false,18);
+	prueba = prueba.move(true,7);
+	prueba = prueba.move(false,6);
+	prueba = prueba.move(true,5);
+	prueba = prueba.move(false,27);
+	prueba = prueba.move(true,33);
+	prueba = prueba.move(false,23);
+	prueba = prueba.move(true,17);
+	prueba = prueba.move(false,11);
+	prueba = prueba.move(true,19);
+	prueba = prueba.move(false,15);
+	prueba = prueba.move(true,14);
+	prueba = prueba.move(false,31);
+	prueba = prueba.move(true,20);
+	prueba = prueba.move(false,32);
+	prueba = prueba.move(true,30);
+	prueba = prueba.move(false,10);
+	prueba = prueba.move(true,25);
+	prueba = prueba.move(false,24);
+	prueba = prueba.move(true,34);
+	prueba = prueba.move(false,28);
+	prueba = prueba.move(true,16);
+	prueba = prueba.move(false,4);
+	prueba = prueba.move(true,29);
+	prueba = prueba.move(false,35);
+	prueba = prueba.move(true,36);
+	prueba = prueba.move(false,8);
+	prueba = prueba.move(true,9);
+
+    std::cout << prueba.value();
+
+
+
+
+
 	prueba.print(std::cout, 36);
-
-        std::cout<<prueba.outflank(true,29)<<std::endl;
-
-
 
 
 
