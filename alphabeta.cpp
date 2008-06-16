@@ -91,7 +91,7 @@ state_t* nextchild (state_t node, int nodeType, int &p){
 }
 
 
-int alphabeta(state_t node, int alpha, int beta, int nodeType) {
+int alphabeta(state_t node, int alpha, int beta, int nodeType, int &bp) {
 
 	int g;
 	int a;
@@ -100,6 +100,7 @@ int alphabeta(state_t node, int alpha, int beta, int nodeType) {
 	int p = 0;
 	alphaBeta ab;
 	int arg;
+	int x;
 
     //Se busca el nodo en la tabla de hash
     hash_t::iterator it= hash.find(node);
@@ -132,10 +133,11 @@ int alphabeta(state_t node, int alpha, int beta, int nodeType) {
 			c= firstchild(node,nodeType,p);
 
 			while ((g<beta) && (c!=NULL)) {
-				arg= alphabeta((*c),a,beta,MINNODE);
+				arg= alphabeta((*c),a,beta,MINNODE,x);
+if (arg>g)
+bp=p;
 				g= std::max(g,arg);
 				a= std::max(a,g);
-
 				free(c);
 				c= nextchild(node,nodeType,p);
 			}
@@ -148,7 +150,7 @@ int alphabeta(state_t node, int alpha, int beta, int nodeType) {
 			c= firstchild(node,nodeType,p);
 			
 			while ((g>alpha) && (c!=NULL)) {
-				arg= alphabeta((*c),alpha,b,MAXNODE);
+				arg= alphabeta((*c),alpha,b,MAXNODE,x);
 				g= std::min(g,arg);
 				b= std::min(b,g);
 				free(c);
@@ -166,7 +168,6 @@ int alphabeta(state_t node, int alpha, int beta, int nodeType) {
 
 		hash.insert(std::make_pair(node,ab));
 
-
 	return g;
 }
 
@@ -175,12 +176,14 @@ int MT_SSS (state_t node){
 
 	int g= INT_MAX;
 	int y= 0;
+	int bestPlay;
 
 	while (y!=g){
 		y= g;
-		g= alphabeta(node,(y-1),y,MAXNODE);
+		g= alphabeta(node,(y-1),y,MAXNODE,bestPlay);
 	}
 
+	std::cout<<"Mejor Jugada: "<<bestPlay<<" con g: "<<g<<std::endl;
 	return g;
 }
 
@@ -210,25 +213,24 @@ int main() {
 	prueba = prueba.move(true,19);
 	prueba = prueba.move(false,15);
 	prueba = prueba.move(true,14);
-	prueba = prueba.move(false,31);
-	prueba = prueba.move(true,20);
-	prueba = prueba.move(false,32);
-	prueba = prueba.move(true,30);
-	prueba = prueba.move(false,10);
-	prueba = prueba.move(true,25);
-	prueba = prueba.move(false,24);
-	prueba = prueba.move(true,34);
-	prueba = prueba.move(false,28);
-	prueba = prueba.move(true,16);
-	prueba = prueba.move(false,4);
-	prueba = prueba.move(true,29);
+//	prueba = prueba.move(false,31);
+//	prueba = prueba.move(true,20);
+//	prueba = prueba.move(false,32);
+//	prueba = prueba.move(true,30);
+//	prueba = prueba.move(false,10);
+//	prueba = prueba.move(true,25);
+//	prueba = prueba.move(false,24);
+//	prueba = prueba.move(true,34);
+//	prueba = prueba.move(false,28);
+//	prueba = prueba.move(true,16);
+//	prueba = prueba.move(false,4);
+//	prueba = prueba.move(true,29);
 //	prueba = prueba.move(false,35);
 //	prueba = prueba.move(true,36);
+//	prueba = prueba.move(false,8);
+//	prueba = prueba.move(true,9);
 
-
-	std::cout<<MT_SSS(prueba)<<std::endl;
-
-
+MT_SSS(prueba);
 
 
 
