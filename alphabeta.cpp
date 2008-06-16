@@ -99,14 +99,14 @@ int alphabeta(state_t node, int alpha, int beta, int nodeType, int &bp) {
 
 //node.print(std::cout,36);
 
-	int g;
-	int a;
-	int b;
+	char g;
+	char a;
+	char b;
 	state_t * c;
 	int p = 0;
 	alphaBeta ab;
-	int arg;
-	int x;
+	char arg;
+	char x;
 
     //nodo expandido
     expandidos++;
@@ -124,18 +124,19 @@ int alphabeta(state_t node, int alpha, int beta, int nodeType, int &bp) {
     }
 
 	if (node.terminal()) {
-		g= (int) node.value();
+		g = (char) node.value();
 
 	} else {
 
 		if (nodeType==MAXNODE){
 
-			g= INT_MIN;
+			g= 0;
 			a= alpha;
 
-			c= firstchild(node,nodeType,p);
+			c = firstchild(node,nodeType,p);
 			while ((g<beta) && (c!=NULL)) {
-				arg= alphabeta((*c),a,beta,MINNODE,x);
+                int temp = (int)x;
+				arg= alphabeta((*c),a,beta,MINNODE,temp);
                 if (arg>g) bp=p;
 				g= std::max(g,arg);
 				a= std::max(a,g);
@@ -145,12 +146,14 @@ int alphabeta(state_t node, int alpha, int beta, int nodeType, int &bp) {
 
 		} else {
 
-			g= INT_MAX;
+			g= 127;
 			b= beta;
 
 			c= firstchild(node,nodeType,p);		
 			while ((g>alpha) && (c!=NULL)) {
-				arg= alphabeta((*c),alpha,b,MAXNODE,x);
+                int temp = (int)x;
+				arg= alphabeta((*c),alpha,b,MAXNODE,temp);
+				if (arg<g) bp=p;
 				g= std::min(g,arg);
 				b= std::min(b,g);
 				free(c);
@@ -173,8 +176,8 @@ int alphabeta(state_t node, int alpha, int beta, int nodeType, int &bp) {
 
 char MT_SSS (state_t node, int player){
     
-	int g= 127;
-	int y= 0;
+	char g = 127;
+	char y= 0;
 	int bestPlay;
 	clock_t start,finish;
 	double time;
@@ -187,7 +190,7 @@ char MT_SSS (state_t node, int player){
 	finish = clock();
     time = (double(finish)-double(start))/CLOCKS_PER_SEC;;
 
-	std::cout<<"g: "<<g<<" expandidos:"<<expandidos<<" tiempo: "<<time<<std::endl;
+	std::cout<<"g: "<<(int)g<<" expandidos:"<<expandidos<<" tiempo: "<<time<<std::endl;
 	return g;
 }
 
