@@ -186,7 +186,23 @@ int MT_SSS (state_t node){
 	std::cout<<"Mejor Jugada: "<<bestPlay<<" con g: "<<g<<std::endl;
 	return g;
 }
+/*
+int mtd_binario (state_t node){
 
+	int g= INT_MAX;
+	int y= 0;
+	int bestPlay;
+
+	while (y!=g){
+		y= g;
+		g= alphabeta(node,(y-1),y,MAXNODE,bestPlay);
+	}
+
+	std::cout<<"Mejor Jugada: "<<bestPlay<<" con g: "<<g<<std::endl;
+	return g;
+}
+
+*/
 
 
 
@@ -213,10 +229,10 @@ int main() {
 	prueba = prueba.move(true,19);
 	prueba = prueba.move(false,15);
 	prueba = prueba.move(true,14);
-//	prueba = prueba.move(false,31);
-//	prueba = prueba.move(true,20);
-//	prueba = prueba.move(false,32);
-//	prueba = prueba.move(true,30);
+	prueba = prueba.move(false,31);
+	prueba = prueba.move(true,20);
+	prueba = prueba.move(false,32);
+	prueba = prueba.move(true,30);
 //	prueba = prueba.move(false,10);
 //	prueba = prueba.move(true,25);
 //	prueba = prueba.move(false,24);

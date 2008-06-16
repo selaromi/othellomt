@@ -30,16 +30,6 @@ CompilerSet=0
 CompilerSettings=
 
 [Unit1]
-FileName=othello_cut.cpp
-CompileCpp=1
-Folder=Project1
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit2]
 FileName=othello_cut.h
 CompileCpp=1
 Folder=Project1
@@ -49,8 +39,18 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit3]
+[Unit2]
 FileName=alphabeta.cpp
+CompileCpp=1
+Folder=Project1
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit3]
+FileName=othello_cut.cpp
 CompileCpp=1
 Folder=Project1
 Compile=1
