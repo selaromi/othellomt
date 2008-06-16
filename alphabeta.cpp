@@ -1,6 +1,7 @@
 #include <iomanip>
 #include <ext/hash_map>
 #include <limits.h>
+#include <ctime>
 #include <algorithm>
 #include "othello_cut.h"
 
@@ -13,6 +14,7 @@
 
 bool myColor;
 bool otColor;
+int expandidos;
 
 
 ////////////////////HASH////////////////////
@@ -106,6 +108,8 @@ int alphabeta(state_t node, int alpha, int beta, int nodeType, int &bp) {
 	int arg;
 	int x;
 
+    //nodo expandido
+    expandidos++;
     //Se busca el nodo en la tabla de hash
     hash_t::iterator it= hash.find(node);
 
@@ -167,27 +171,76 @@ int alphabeta(state_t node, int alpha, int beta, int nodeType, int &bp) {
 }
 
 
-int MT_SSS (state_t node, int player){
-
-	int g= INT_MAX;
+char MT_SSS (state_t node, int player){
+    
+	int g= 127;
 	int y= 0;
 	int bestPlay;
-	while (y!=g){
+	clock_t start,finish;
+	double time;
+    start = clock();
+    while (y!=g){
 		y= g;
 		g= alphabeta(node,(y-1),y,player,bestPlay);
 	}
+	
+	finish = clock();
+    time = (double(finish)-double(start))/CLOCKS_PER_SEC;;
 
-	std::cout<<"Mejor Jugada: "<<bestPlay<<" con g: "<<g<<std::endl;
+	std::cout<<"g: "<<g<<" expandidos:"<<expandidos<<" tiempo: "<<time<<std::endl;
 	return g;
 }
 
 
+
+//function MTDF(root : node_type; f : integer; d : integer) : integer;
+//
+//      g := f;
+//      upperbound := +INFINITY;
+//      lowerbound := -INFINITY;
+//      repeat
+//            if g == lowerbound then beta := g + 1 else beta := g;
+//            g := AlphaBetaWithMemory(root, beta - 1, beta, d);
+//            if g < beta then upperbound := g else lowerbound := g;
+//      until lowerbound >= upperbound;
+//      return g;
+
+
+int MT_BIN (state_t node, int player){
+    int f = 39;
+    int g;
+    int bestplay;
+    int upperbound = INT_MAX;
+    int lowerbound = 0;
+    int alpha,beta;
+    
+    
+    clock_t start,finish;
+	double time;
+    start = clock();
+    
+    do {
+        if (g== lowerbound) beta=g+1; else beta=g;
+        g = alphabeta(node,beta-1,beta,player,bestplay);
+        if (g < beta) upperbound = g; else lowerbound = g;
+    }while (lowerbound >= upperbound);
+    
+    
+    finish = clock();
+    time = (double(finish)-double(start))/CLOCKS_PER_SEC;;
+    
+    
+    std::cout<<"g: "<<g<<" expandidos:"<<expandidos<<" tiempo: "<<time<<std::endl;   
+    return g;
+}
 
 int main(int argc, char* argv[]) {
     
     //yo juego los impares!
 	myColor = false;
 	otColor = true;
+	
+	expandidos=0;
 	
 	bool player = true;
 	state_t prueba;
@@ -199,21 +252,17 @@ int main(int argc, char* argv[]) {
 	int tipo = atoi(argv[1]);
 
     for (int i =0; i<cota; i++){
-//std::cout<<player<<" "<<PV[i]<<std::endl;
         prueba = prueba.move(player, PV[i]);
         player= !player;
-        
-
-            
         myColor = !myColor;
         otColor = !otColor;
         
     }
-    
-//    prueba.print(std::cout,26);
-    
     if(tipo==1){ 
         if (player)MT_SSS(prueba,MINNODE);
+        else MT_SSS(prueba,MAXNODE);
+    }else if(tipo==2){ 
+        if (player)MT_BIN(prueba,MINNODE);
         else MT_SSS(prueba,MAXNODE);
     }
     else std::cout<<"no ta aca"<<std::endl;
