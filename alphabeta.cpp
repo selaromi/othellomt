@@ -49,7 +49,7 @@ state_t* firstchild (state_t node, int nodeType, int &p){
 
 
 	//Busca posicion para colocar ficha de color
-    for (int i= 0; i<=DIM; i++){
+    for (int i= 0; i<DIM; i++){
 		
 		if (node.outflank(color,i)){
 			p= i;
@@ -58,6 +58,8 @@ state_t* firstchild (state_t node, int nodeType, int &p){
 		}
 	}
 
+    p= 36;
+    (*rNode)= node.move(color,36);
 	//Si no encuentra posicion
 	return rNode;
 }
@@ -93,6 +95,8 @@ state_t* nextchild (state_t node, int nodeType, int &p){
 
 int alphabeta(state_t node, int alpha, int beta, int nodeType, int &bp) {
 
+//node.print(std::cout,36);
+
 	int g;
 	int a;
 	int b;
@@ -107,11 +111,6 @@ int alphabeta(state_t node, int alpha, int beta, int nodeType, int &bp) {
 
     //Si el nodo esta en la tabla
     if(it!=hash.end()){
-
-//std::cout<<"alpha: "<<alpha<<" beta: "<<beta;
-//std::cout<<" f+: "<<((*it).second.f_plus)<<" f-: "<<((*it).second.f_minus)<<std::endl;
-//node.print(std::cout,1);
-
 		if(((*it).second.f_minus) >= beta)
 			return ((*it).second.f_minus);
 	    
@@ -131,11 +130,9 @@ int alphabeta(state_t node, int alpha, int beta, int nodeType, int &bp) {
 			a= alpha;
 
 			c= firstchild(node,nodeType,p);
-
 			while ((g<beta) && (c!=NULL)) {
 				arg= alphabeta((*c),a,beta,MINNODE,x);
-if (arg>g)
-bp=p;
+                if (arg>g) bp=p;
 				g= std::max(g,arg);
 				a= std::max(a,g);
 				free(c);
@@ -147,8 +144,7 @@ bp=p;
 			g= INT_MAX;
 			b= beta;
 
-			c= firstchild(node,nodeType,p);
-			
+			c= firstchild(node,nodeType,p);		
 			while ((g>alpha) && (c!=NULL)) {
 				arg= alphabeta((*c),alpha,b,MAXNODE,x);
 				g= std::min(g,arg);
@@ -165,113 +161,61 @@ bp=p;
 		ab.f_plus= g;
 	if (g>alpha)
 		ab.f_minus= g;
-
 		hash.insert(std::make_pair(node,ab));
 
 	return g;
 }
 
 
-int MT_SSS (state_t node){
+int MT_SSS (state_t node, int player){
 
 	int g= INT_MAX;
 	int y= 0;
 	int bestPlay;
-
 	while (y!=g){
 		y= g;
-		g= alphabeta(node,(y-1),y,MAXNODE,bestPlay);
-	}
-
-	std::cout<<"Mejor Jugada: "<<bestPlay<<" con g: "<<g<<std::endl;
-	return g;
-}
-/*
-int mtd_binario (state_t node){
-
-	int g= INT_MAX;
-	int y= 0;
-	int bestPlay;
-
-	while (y!=g){
-		y= g;
-		g= alphabeta(node,(y-1),y,MAXNODE,bestPlay);
+		g= alphabeta(node,(y-1),y,player,bestPlay);
 	}
 
 	std::cout<<"Mejor Jugada: "<<bestPlay<<" con g: "<<g<<std::endl;
 	return g;
 }
 
-*/
 
 
-
-int main() {
-
-	myColor= false;
-	otColor= true;
+int main(int argc, char* argv[]) {
+    
+    //yo juego los impares!
+	myColor = false;
+	otColor = true;
+	
+	bool player = true;
 	state_t prueba;
+	
+	//define q jugada se va a evaluar (de 1 a 32)
+	int cota=atoi(argv[2]);
+	
+	//define si es es MT_SSS o MT_BINARIO (1 o 2)
+	int tipo = atoi(argv[1]);
 
-	prueba = prueba.move(true,12);
-	prueba = prueba.move(false,21);
-	prueba = prueba.move(true,26);
-	prueba = prueba.move(false,13);
-	prueba = prueba.move(true,22);
-	prueba = prueba.move(false,18);
-	prueba = prueba.move(true,7);
-	prueba = prueba.move(false,6);
-	prueba = prueba.move(true,5);
-	prueba = prueba.move(false,27);
-	prueba = prueba.move(true,33);
-	prueba = prueba.move(false,23);
-	prueba = prueba.move(true,17);
-	prueba = prueba.move(false,11);
-	prueba = prueba.move(true,19);
-	prueba = prueba.move(false,15);
-	prueba = prueba.move(true,14);
-	prueba = prueba.move(false,31);
-	prueba = prueba.move(true,20);
-	prueba = prueba.move(false,32);
-	prueba = prueba.move(true,30);
-//	prueba = prueba.move(false,10);
-//	prueba = prueba.move(true,25);
-//	prueba = prueba.move(false,24);
-//	prueba = prueba.move(true,34);
-//	prueba = prueba.move(false,28);
-//	prueba = prueba.move(true,16);
-//	prueba = prueba.move(false,4);
-//	prueba = prueba.move(true,29);
-//	prueba = prueba.move(false,35);
-//	prueba = prueba.move(true,36);
-//	prueba = prueba.move(false,8);
-//	prueba = prueba.move(true,9);
+    for (int i =0; i<cota; i++){
+//std::cout<<player<<" "<<PV[i]<<std::endl;
+        prueba = prueba.move(player, PV[i]);
+        player= !player;
+        
 
-MT_SSS(prueba);
-
-
-
-
+            
+        myColor = !myColor;
+        otColor = !otColor;
+        
+    }
+    
+//    prueba.print(std::cout,26);
+    
+    if(tipo==1){ 
+        if (player)MT_SSS(prueba,MINNODE);
+        else MT_SSS(prueba,MAXNODE);
+    }
+    else std::cout<<"no ta aca"<<std::endl;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
