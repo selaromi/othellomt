@@ -128,10 +128,6 @@ int alphabeta(state_t node, char alpha, char beta, int nodeType, int &bp) {
 	if (node.terminal()) {
 		g = (char) node.value();
 
-//std::cout<<"g: "<<(int) g<<std::endl;
-//node.print(std::cout,36);
-
-
 	} else {
 
 		if (nodeType==MAXNODE){
@@ -185,7 +181,6 @@ int alphabeta(state_t node, char alpha, char beta, int nodeType, int &bp) {
 		hash.insert(std::make_pair(node,ab));
 	}
 
-//std::cout<<"g: "<<(int) g<<std::endl;
 	return g;
 }
 
@@ -240,41 +235,6 @@ int MT_BIN (state_t node, int player){
 }
 
 
-/*
-int MT_BIN (state_t node, int player){
-
-	int g;
-	int a_bound= 0;
-	int b_bound= 127;
-	int m= (b_bound-a_bound)/2;
-	int bestPlay;
-
-    clock_t start,finish;
-	double time;
-    start = clock();
-
-
-	while(a_bound!=b_bound){
-		m= (b_bound-a_bound)/2;
-std::cout<<"m: "<<m<<std::endl;
-		g= alphabeta(node,m,m+1,player,bestPlay);
-std::cout<<"g: "<<g<<std::endl;
-		if (g<m){
-			b_bound= g;
-		} else {
-			a_bound= g;
-		}
-	}
-
-    finish = clock();
-    time = (double(finish)-double(start))/CLOCKS_PER_SEC;;
-
-
-    std::cout<<"g: "<<g<<" expandidos:"<<expandidos<<" tiempo: "<<time<<std::endl;
-
-}
-*/
-
 int main(int argc, char* argv[]) {
     
     //yo juego los impares!
@@ -293,11 +253,9 @@ int main(int argc, char* argv[]) {
 	int tipo = atoi(argv[1]);
 
     for (int i =0; i<cota; i++){
-//std::cout<<PV[i]<<std::endl;
+
         prueba = prueba.move(player, PV[i]);
-        player= !player;
-//        myColor = !myColor;
-//        otColor = !otColor;        
+        player= !player;       
     }
 
     if(tipo==1){ 
