@@ -1,6 +1,3 @@
-for ($i=32;$i -ge 10;$i--) {
-	if ($i%2 -eq 0){
-		echo "./othello.exe 1 "$i" >> resultados_parafichas_blancas.txt\n"
-		./othello.exe 1 $i >> resultados_parafichas_blancas.txt
-	}
+for ($i=33;$i -ge 12;$i--) {
+	./othello.exe 2 $i >> resultados_MTSSS.txt
 }
