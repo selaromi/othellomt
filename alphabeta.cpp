@@ -43,6 +43,7 @@ state_t* firstchild (state_t node, int nodeType, int &p){
 	state_t * rNode= (state_t *) malloc (sizeof(state_t));
 
 	//Determinamos el color
+
 	if (nodeType==MAXNODE){
 		color = myColor;
 	} else {
@@ -95,9 +96,10 @@ state_t* nextchild (state_t node, int nodeType, int &p){
 }
 
 
-int alphabeta(state_t node, int alpha, int beta, int nodeType, int &bp) {
+int alphabeta(state_t node, char alpha, char beta, int nodeType, int &bp) {
 
 //node.print(std::cout,36);
+
 
 	char g;
 	char a;
@@ -125,6 +127,10 @@ int alphabeta(state_t node, int alpha, int beta, int nodeType, int &bp) {
 
 	if (node.terminal()) {
 		g = (char) node.value();
+
+//std::cout<<"g: "<<(int) g<<std::endl;
+//node.print(std::cout,36);
+
 
 	} else {
 
@@ -164,12 +170,22 @@ int alphabeta(state_t node, int alpha, int beta, int nodeType, int &bp) {
 
 	//UPDATEAR HASH AQUI?
 
-	if (g<beta)
-		ab.f_plus= g;
-	if (g>alpha)
-		ab.f_minus= g;
-		hash.insert(std::make_pair(node,ab));
+	if(it!=hash.end()){
 
+		if (g<beta)
+			(*it).second.f_plus= g;
+		if (g>alpha)
+			(*it).second.f_minus= g;
+	} else {
+
+		if (g<beta)
+			ab.f_plus= g;
+		if (g>alpha)
+			ab.f_minus= g;
+		hash.insert(std::make_pair(node,ab));
+	}
+
+//std::cout<<"g: "<<(int) g<<std::endl;
 	return g;
 }
 
@@ -223,6 +239,42 @@ int MT_BIN (state_t node, int player){
     return g;
 }
 
+
+/*
+int MT_BIN (state_t node, int player){
+
+	int g;
+	int a_bound= 0;
+	int b_bound= 127;
+	int m= (b_bound-a_bound)/2;
+	int bestPlay;
+
+    clock_t start,finish;
+	double time;
+    start = clock();
+
+
+	while(a_bound!=b_bound){
+		m= (b_bound-a_bound)/2;
+std::cout<<"m: "<<m<<std::endl;
+		g= alphabeta(node,m,m+1,player,bestPlay);
+std::cout<<"g: "<<g<<std::endl;
+		if (g<m){
+			b_bound= g;
+		} else {
+			a_bound= g;
+		}
+	}
+
+    finish = clock();
+    time = (double(finish)-double(start))/CLOCKS_PER_SEC;;
+
+
+    std::cout<<"g: "<<g<<" expandidos:"<<expandidos<<" tiempo: "<<time<<std::endl;
+
+}
+*/
+
 int main(int argc, char* argv[]) {
     
     //yo juego los impares!
@@ -241,18 +293,19 @@ int main(int argc, char* argv[]) {
 	int tipo = atoi(argv[1]);
 
     for (int i =0; i<cota; i++){
+//std::cout<<PV[i]<<std::endl;
         prueba = prueba.move(player, PV[i]);
         player= !player;
-        myColor = !myColor;
-        otColor = !otColor;
-        
+//        myColor = !myColor;
+//        otColor = !otColor;        
     }
+
     if(tipo==1){ 
         if (player)MT_SSS(prueba,MINNODE);
         else MT_SSS(prueba,MAXNODE);
     }else if(tipo==2){ 
         if (player)MT_BIN(prueba,MINNODE);
-        else MT_SSS(prueba,MAXNODE);
+        else MT_BIN(prueba,MAXNODE);
     }
     else std::cout<<"no ta aca"<<std::endl;
 }
