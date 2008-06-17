@@ -207,8 +207,34 @@ char MT_SSS (state_t node, int player){
 
 
 int MT_BIN (state_t node, int player){
-   
-    return 1;
+
+    char g = 200;
+    char y;
+    int bestPlay;
+    char alpha=0;
+    char beta=72;
+
+    clock_t start,finish;
+	double time;
+    start = clock();
+       
+       do{
+          g=(beta+alpha)/2;
+          y=g;
+          
+          g=alphabeta(node,g,g+1,player, bestPlay);
+          
+          if(g <= y){
+             beta=g;
+          }else if(g >= (y+1)){
+             alpha=g;
+          }          
+       }while(alpha!=beta);
+       
+    finish = clock();
+    time = (double(finish)-double(start))/CLOCKS_PER_SEC;;
+    std::cout<<"g: "<<(int)g<<" expandidos:"<<expandidos<<" tiempo: "<<time<<std::endl;
+    return g;
 }
 
 
