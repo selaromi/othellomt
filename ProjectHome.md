@@ -1,0 +1,1 @@
+This project plans to implement an efficient solution for the min max alphabeta pruning exploration in the game of othello.
